@@ -56,5 +56,9 @@ if(errors.length > 0) {
 }
 });
 
+router.get('/feed', ensureAuthenticated, (req, res) => {
+    res.render('blogs/feed');
+});
+
 module.exports = router;
 

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
+const {ensureAuthenticated} = require('../helpers/auth');
 
 // Load User Model
 require('../models/User');
@@ -84,6 +85,16 @@ router.post('/login', (req,res,next) => {
 router.get('/logout', (req, res) => {
     req.logout();
     res.redirect('/users/login');
+});
+
+// Follow Route
+router.get('/follow', ensureAuthenticated, (req, res) => {
+    res.render('users/follow');
+});
+
+// Follow User Submit
+router.post('/follow/:id', (req, res) => {
+    res.send('Follow');
 });
 
 module.exports = router;
