@@ -1,0 +1,33 @@
+<h1 class="text-center mb-5">Follow People</h1>
+
+<table class="table text-center">
+
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Username</th>
+      <th scope="col">First</th>
+      <th scope="col">Last</th>
+      <th scope="col">Follow</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+{{#each users}}      
+    
+    <tr>
+      <td scope="row">{{username}}</td>
+      <td>{{fname}}</td>
+      <td>{{lname}}</td>
+      <td><a href="/users/follow/{{id}}" class="btn btn-info">Follow {{fname}}</a></td>   
+    </tr>
+
+{{else}} 
+    <tr>
+        <td colspan="4">No Other User</td>
+    </tr>
+{{/each}} 
+
+  </tbody>
+
+</table>

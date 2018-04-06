@@ -5,5 +5,13 @@ module.exports = {
         }
         req.flash('error_msg', 'Not Authorized');
         res.redirect('/users/login');
-    }
+    },
+
+    ensureGuest: function(req, res, next) {
+        if(req.isAuthenticated()) {
+            res.redirect('/');
+        } else {
+            return next();
+        }
+    },
 }

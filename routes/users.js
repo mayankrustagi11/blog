@@ -3,24 +3,24 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const router = express.Router();
-const {ensureAuthenticated} = require('../helpers/auth');
+const {ensureAuthenticated, ensureGuest} = require('../helpers/auth');
 
 // Load User Model
 require('../models/User');
 const User = mongoose.model('User');
 
 // Login Route
-router.get('/login', (req, res) => {
+router.get('/login', ensureGuest, (req, res) => {
     res.render('users/login');
 });
 
 // Register Route
-router.get('/register', (req, res) => {
+router.get('/register', ensureGuest, (req, res) => {
     res.render('users/register');
 });
 
 // Register Form Submit
-router.post('/register', (req, res) => {
+router.post('/register', ensureGuest, (req, res) => {
     let errors = [];
 
     if(req.body.password != req.body.password2) {
@@ -73,7 +73,7 @@ router.post('/register', (req, res) => {
 });
 
 // Login Form Submit
-router.post('/login', (req,res,next) => {
+router.post('/login', ensureGuest, (req,res,next) => {
     passport.authenticate('local', {
       successRedirect: '/',
       failureRedirect: '/users/login',
@@ -89,12 +89,20 @@ router.get('/logout', (req, res) => {
 
 // Follow Route
 router.get('/follow', ensureAuthenticated, (req, res) => {
-    res.render('users/follow');
+    User.find({
+        _id: {$ne: req.user.id}
+    })
+    .sort({username: 'asc'})
+    .then(users => {
+       res.render('users/follow', {
+       users: users
+       });
+   });
 });
 
-// Follow User Submit
-router.post('/follow/:id', (req, res) => {
-    res.send('Follow');
+// Follow User
+router.get('/follow/:id', ensureAuthenticated, (req, res) => {
+    res.send('Followed');
 });
 
 module.exports = router;
