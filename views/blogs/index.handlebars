@@ -1,0 +1,22 @@
+<h1 class="text-center mb-5">Blogs</h1>
+
+<div class="row">
+
+{{#each blogs}}
+    <div class="col-sm-4">
+
+        <div class="card text-center">
+            <div class="card-body">
+                <h4 class="card-title">{{title}}</h4>
+                <hr>
+                <p class="card-text">{{details}}</p>
+            </div>
+        </div>
+
+    </div>
+
+{{else}}
+<p>No Blogs to See</p>
+{{/each}}  
+
+</div>
