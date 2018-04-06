@@ -7,6 +7,10 @@ const {ensureAuthenticated} = require('../helpers/auth');
 require('../models/Blog');
 const Blog = mongoose.model('Blogs');
 
+// Load User Model
+require('../models/User');
+const User = mongoose.model('User');
+
 // Blog Index Page Route
 router.get('/', ensureAuthenticated, (req, res) => {
  Blog.find({user: req.user.id})
@@ -57,8 +61,26 @@ if(errors.length > 0) {
 });
 
 router.get('/feed', ensureAuthenticated, (req, res) => {
-    res.render('blogs/feed');
+    let ids = []
+    User.find({_id: req.user.id})
+    .then(user => {
+        let follow_list = user[0].followed;
+
+        follow_list.forEach(follow_user => {
+            ids.push(follow_user.followedUser);
+        }); 
+        
+        Blog.find({
+            user: {$in: JSON.stringify(ids)}
+        })
+        .then(blogs => {
+            res.render('blogs/feed', {
+            blogs: blogs
+    });
+        })
+    });
 });
 
 module.exports = router;
 
+ 

@@ -90,7 +90,7 @@ router.get('/logout', (req, res) => {
 // Follow Route
 router.get('/follow', ensureAuthenticated, (req, res) => {
     User.find({
-        _id: {$ne: req.user.id}
+        _id: {$ne: req.user.id}  // All other users except the logged in user
     })
     .sort({username: 'asc'})
     .then(users => {
@@ -102,7 +102,21 @@ router.get('/follow', ensureAuthenticated, (req, res) => {
 
 // Follow User
 router.get('/follow/:id', ensureAuthenticated, (req, res) => {
-    res.send('Followed');
+    User.findOne({
+        _id: req.user.id
+    })
+    .then(user => {
+        const newFollowedUser = {
+            followedUser: req.params.id
+        }
+
+        // Add User to array
+        user.followed.unshift(newFollowedUser);
+        user.save()
+        .then(user => {
+            res.redirect('/blogs/feed');
+        });
+    });
 });
 
 module.exports = router;

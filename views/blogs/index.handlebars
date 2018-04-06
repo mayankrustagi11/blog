@@ -1,11 +1,11 @@
-<h1 class="text-center mb-5">Blogs</h1>
+<h1 class="text-center mb-4">My Blogs</h1>
 
-<div class="row blog-row">
+<div class="row blog-row text-center">
 
 {{#each blogs}}
     <div class="col-sm-4">
 
-        <div class="card text-center">
+        <div class="card">
             <div class="card-body">
                 <h4 class="card-title">{{title}}</h4>
                 <hr>
@@ -16,9 +16,9 @@
     </div>
 
 {{else}}
-<p class="text-center">No Blogs to See</p>
+<p>No Blogs to See</p>
 {{/each}}  
 
 </div>
 
-<a href="/blogs/feed" class="btn btn-primary">View Posts From People You Follow</a>
+<a href="/blogs/feed" class="btn btn-primary mb-20">View Posts From People You Follow</a>
