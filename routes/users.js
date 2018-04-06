@@ -30,7 +30,7 @@ router.post('/register', ensureGuest, (req, res) => {
     if(req.body.password.length < 6) {
         errors.push({text: 'Password must be atleast 6 characters'});
     }
-
+// If Errors
     if(errors.length > 0) {
         res.render('users/register', {
             errors: errors,
@@ -38,13 +38,15 @@ router.post('/register', ensureGuest, (req, res) => {
             lname: req.body.lname,
             username: req.body.username
         });
-    } else {
+    } 
+// No Errors    
+    else {
         User.findOne({username: req.body.username})
         .then(user => {
             if(user) {
                 req.flash('error_msg', 'Username already registered');
                 res.redirect('/users/register');
-            } else {
+            } else { // Create New Object
                 const newUser = new User({
                     fname: req.body.fname,
                     lname: req.body.lname,

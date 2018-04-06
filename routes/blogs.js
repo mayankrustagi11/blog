@@ -38,19 +38,22 @@ if(!req.body.details) {
     errors.push({text: 'Please add some details'});
 }
 
+// If Errors
 if(errors.length > 0) {
     res.render('blogs/add', {
     errors: errors,
     title: req.body.title,
     details: req.body.details
     });
-} else {
+}
+// No Errors
+ else {
     const newBlog = {
     title: req.body.title,
     details: req.body.details,
     user: req.user.id
     };
-
+// Create New Object
     new Blog(newBlog)
     .save()
     .then(blog => {
@@ -60,16 +63,21 @@ if(errors.length > 0) {
 }
 });
 
+// Get Blog Posts From followed Users
 router.get('/feed', ensureAuthenticated, (req, res) => {
     let ids = []
+
+    // Find Followed Users
     User.find({_id: req.user.id})
     .then(user => {
         let follow_list = user[0].followed;
 
+        // Get User id
         follow_list.forEach(follow_user => {
             ids.push(follow_user.followedUser);
         }); 
-        
+
+        // Find Posts from users with ids   
         Blog.find({
             user: {$in: JSON.stringify(ids)}
         })
