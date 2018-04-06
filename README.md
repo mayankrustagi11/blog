@@ -1,4 +1,4 @@
-# PusherPoll
+# Blog Posts
 
 > A NodeJs/ExpressJS application that allows users to share their thought with th world through blogs.
 
