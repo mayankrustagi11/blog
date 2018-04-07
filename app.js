@@ -16,6 +16,8 @@ const blogs = require('./routes/blogs');
 
 // Load Models
 require('./models/User');
+require('./models/Blog');
+require('./models/Follows');
 
 // Load Keys
 const keys = require('./config/keys');

@@ -11,6 +11,10 @@ const Blog = mongoose.model('Blogs');
 require('../models/User');
 const User = mongoose.model('User');
 
+// Load Follow Model
+require('../models/Follows');
+const Follow = mongoose.model('Follow');
+
 // Blog Index Page Route
 router.get('/', ensureAuthenticated, (req, res) => {
  Blog.find({user: req.user.id})
@@ -67,26 +71,25 @@ if(errors.length > 0) {
 router.get('/feed', ensureAuthenticated, (req, res) => {
     let ids = []
 
-    // Find Followed Users
-    User.find({_id: req.user.id})
-    .then(user => {
-        let follow_list = user[0].followed;
+    Follow.find({
+        follower: req.user.id,
+        followee: {$ne: req.user.id}
+    })
+    .populate('follower')
+    .populate('followee')
+    .then(follows => {
 
-        // Get User id
-        follow_list.forEach(follow_user => {
-            ids.push(follow_user.followedUser);
-        }); 
+        follows.forEach(followee => {
+            ids.push(followee._id);
+        });
 
-        // Find Posts from users with ids   
-        Blog.find({
-            user: {$in: JSON.stringify(ids)}
-        })
+        Blog.find({user: {$in: ids} })
         .then(blogs => {
             res.render('blogs/feed', {
-            blogs: blogs
-    });
-        })
-    });
+                blogs: blogs
+            });
+        });
+    });   
 });
 
 module.exports = router;

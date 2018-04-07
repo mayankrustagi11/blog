@@ -9,6 +9,10 @@ const {ensureAuthenticated, ensureGuest} = require('../helpers/auth');
 require('../models/User');
 const User = mongoose.model('User');
 
+// Load Follow Model
+require('../models/Follows');
+const Follow = mongoose.model('Follow');
+
 // Login Route
 router.get('/login', ensureGuest, (req, res) => {
     res.render('users/login');
@@ -104,20 +108,26 @@ router.get('/follow', ensureAuthenticated, (req, res) => {
 
 // Follow User
 router.get('/follow/:id', ensureAuthenticated, (req, res) => {
-    User.findOne({
-        _id: req.user.id
+    Follow.findOne({
+        follower: req.user.id,
+        followee: req.params.id
     })
-    .then(user => {
-        const newFollowedUser = {
-            followedUser: req.params.id
-        }
-
-        // Add User to array
-        user.followed.unshift(newFollowedUser);
-        user.save()
-        .then(user => {
+    .then(follow => {
+        if(follow) {  
+            req.flash('error_msg', 'Already Followed');
             res.redirect('/blogs/feed');
-        });
+        } else {
+            const follow = new Follow({
+                follower: req.user.id,
+                followee: req.params.id
+            });
+
+            follow.save()
+            .then(follow => {
+                req.flash('success_msg', 'Followed');
+                res.redirect('/blogs/feed');
+            });
+        }
     });
 });
 

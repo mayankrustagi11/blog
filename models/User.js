@@ -19,12 +19,6 @@ const UserSchema = new Schema({
         type: String,
         required: true
     },
-    followed: [{
-        followedUser: {
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-        }
-    }],
     date: {
         type: Date,
         default: Date.now
